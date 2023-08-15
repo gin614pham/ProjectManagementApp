@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import auth from '../api/auth';
-import {useToken} from '../tokens/TokenContext';
+import auth from '../../api/auth';
+import {useToken} from '../../tokens/TokenContext';
 
 const LoginScreen = ({navigation}: any) => {
   const [username, setUsername] = useState('');

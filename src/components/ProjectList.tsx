@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {useToken} from '../tokens/TokenContext';
 import project from '../api/project';
 import {Project} from '../types';
@@ -23,15 +23,59 @@ const ProjectList = () => {
       data={projects}
       renderItem={({item}) => {
         return (
-          <View>
-            <Text>{item.name}</Text>
-            <Text>{item.status}</Text>
+          <View style={styles.sectionRow}>
+            <Text style={styles.sectionCell}>{item.name}</Text>
+            <Text style={styles.sectionLastCell}>{item.status}</Text>
           </View>
         );
       }}
+      ListHeaderComponent={() => (
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionHeaderTitle}>Projects</Text>
+          <Text style={styles.sectionLastHeaderTitle}>Status</Text>
+        </View>
+      )}
       keyExtractor={item => item._id}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  sectionRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    backgroundColor: '#eee',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+  },
+  sectionHeaderTitle: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  sectionLastHeaderTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    paddingStart: 4,
+  },
+  sectionCell: {
+    flex: 1,
+    fontSize: 16,
+    textAlign: 'left',
+  },
+  sectionLastCell: {
+    textAlign: 'right',
+    fontSize: 16,
+    paddingVertical: 4,
+  },
+});
 
 export default ProjectList;
