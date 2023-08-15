@@ -18,3 +18,8 @@ export interface Project {
   createdAt: string;
   __v: number;
 }
+
+export interface ItemDropDown {
+  label: string;
+  value: string;
+}

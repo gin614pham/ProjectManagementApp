@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {TouchableOpacity, View} from 'react-native';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = {
   onPress: () => void;
@@ -11,7 +11,7 @@ const FloatingButton = ({onPress}: Props) => {
   return (
     <View style={styles.buttonContainer}>
       <TouchableOpacity onPress={onPress}>
-        <Icon name="plus" size={30} color="black" />
+        <Icon name="briefcase-plus-outline" size={30} color="black" />
       </TouchableOpacity>
     </View>
   );
@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     backgroundColor: '#3498db',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 30,
     elevation: 4,
     shadowColor: '#000',
