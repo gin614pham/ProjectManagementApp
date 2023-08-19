@@ -1,44 +1,59 @@
 import React from 'react';
 import {ItemDropDown} from '../types';
 import MultiSelect from 'react-native-multiple-select';
-import {Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {ColorPalette} from '../constants/styles/ColorPalette';
+import SIZE from '../constants/styles/Font';
 
 interface Props {
+  name: string;
   items: ItemDropDown[];
   selectItem: string[];
   onItemSelect: (selectItem: string[]) => void;
 }
 
-const MultiSelectDropdown = ({items, selectItem, onItemSelect}: Props) => {
+const MultiSelectDropdown = ({
+  name,
+  items,
+  selectItem,
+  onItemSelect,
+}: Props) => {
   return (
     <View>
       <MultiSelect
-        hideTags
         items={items}
         uniqueKey="value"
         onSelectedItemsChange={onItemSelect}
         selectedItems={selectItem}
-        selectText="Select options..."
+        selectText={`${name} : `}
         searchInputPlaceholderText="Search"
-        onChangeInput={text => console.log(text)}
-        tagRemoveIconColor="#CCC"
-        tagBorderColor="#CCC"
-        tagTextColor="#CCC"
-        selectedItemTextColor="#CCC"
-        selectedItemIconColor="#CCC"
-        itemTextColor="#000"
+        tagRemoveIconColor={ColorPalette.DARK_TEXT}
+        tagBorderColor={ColorPalette.LIGHT_GRAY}
+        tagTextColor={ColorPalette.DARK_TEXT}
+        selectedItemTextColor={ColorPalette.DARK_TEXT}
+        selectedItemIconColor={ColorPalette.DARK_TEXT}
+        itemTextColor={ColorPalette.DARK_TEXT}
         displayKey="label"
-        searchInputStyle={{color: '#CCC'}}
-        submitButtonColor="#CCC"
-        submitButtonText="Submit"
+        searchInputStyle={{color: ColorPalette.DARK_TEXT}}
+        submitButtonColor={ColorPalette.DARK_TEXT}
+        styleListContainer={styles.sectionDropdown}
+        styleDropdownMenuSubsection={styles.sectionBoxDropdown}
+        fontSize={SIZE.MEDIUM}
+        hideSubmitButton
+        hideDropdown
       />
-      <View>
-        {selectItem.map(item => (
-          <Text key={item}>{item}</Text>
-        ))}
-      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  sectionDropdown: {
+    maxHeight: 150,
+    overflow: 'scroll',
+  },
+  sectionBoxDropdown: {
+    height: 50,
+  },
+});
 
 export default MultiSelectDropdown;

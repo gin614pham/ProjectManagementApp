@@ -58,4 +58,4 @@ const updateUser = async (token: string) => {
   return response.data;
 };
 
-export {getListUser, getUserById, delUser, addUser, updateUser};
+export default {getListUser, getUserById, delUser, addUser, updateUser};

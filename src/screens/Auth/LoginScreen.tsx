@@ -7,17 +7,19 @@ import {
   View,
 } from 'react-native';
 import auth from '../../api/auth';
-import {useToken} from '../../tokens/TokenContext';
+// import {useToken} from '../../tokens/TokenContext';
+import tokenSession from '../../utils/EncryptedStorage/tokenSession';
 
 const LoginScreen = ({navigation}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const {setToken} = useToken();
+  // const {setToken} = useToken();
 
   const fetchToken = async (username: string, password: string) => {
     const res = await auth.login(username, password);
     if (res) {
-      setToken(res.token);
+      // setToken(res.token);
+      await tokenSession.storeToken(res.token);
       navigation.navigate('ProjectScreen');
     }
   };

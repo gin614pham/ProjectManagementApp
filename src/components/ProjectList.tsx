@@ -1,17 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {useToken} from '../tokens/TokenContext';
+// import {useToken} from '../tokens/TokenContext';
 import project from '../api/project';
 import {Project} from '../types';
+import tokenSession from '../utils/EncryptedStorage/tokenSession';
 
 const ProjectList = () => {
-  const {token} = useToken();
+  // const {token} = useToken();
   const [projects, setProjects] = useState<Project[]>([]);
 
   const fetchProjects = async () => {
-    console.log(token);
+    const token = await tokenSession.getToken();
     const res = await project.getListProject(token);
     setProjects(res.data);
+    console.log(token);
   };
 
   useEffect(() => {
