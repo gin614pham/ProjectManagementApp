@@ -19,7 +19,7 @@ const MultiSelectDropdown = ({
   onItemSelect,
 }: Props) => {
   return (
-    <View>
+    <View style={styles.container}>
       <MultiSelect
         items={items}
         uniqueKey="value"
@@ -27,32 +27,50 @@ const MultiSelectDropdown = ({
         selectedItems={selectItem}
         selectText={`${name} : `}
         searchInputPlaceholderText="Search"
-        tagRemoveIconColor={ColorPalette.DARK_TEXT}
-        tagBorderColor={ColorPalette.LIGHT_GRAY}
+        tagRemoveIconColor={ColorPalette.RED}
+        tagBorderColor={ColorPalette.TEAL}
         tagTextColor={ColorPalette.DARK_TEXT}
         selectedItemTextColor={ColorPalette.DARK_TEXT}
         selectedItemIconColor={ColorPalette.DARK_TEXT}
         itemTextColor={ColorPalette.DARK_TEXT}
         displayKey="label"
-        searchInputStyle={{color: ColorPalette.DARK_TEXT}}
         submitButtonColor={ColorPalette.DARK_TEXT}
-        styleListContainer={styles.sectionDropdown}
-        styleDropdownMenuSubsection={styles.sectionBoxDropdown}
         fontSize={SIZE.MEDIUM}
         hideSubmitButton
         hideDropdown
+        // style custom
+        searchInputStyle={styles.searchInput}
+        styleDropdownMenuSubsection={styles.dropdownSubsection}
+        styleListContainer={styles.dropdownContainer}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionDropdown: {
+  container: {
+    marginBottom: 16,
+  },
+  dropdownContainer: {
+    borderWidth: 1,
+    borderColor: ColorPalette.LIGHT_GRAY,
+    borderRadius: 5,
     maxHeight: 150,
     overflow: 'scroll',
   },
-  sectionBoxDropdown: {
+  dropdownSubsection: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderWidth: 1,
+    borderColor: ColorPalette.LIGHT_GRAY,
+    borderRadius: 5,
     height: 50,
+  },
+  searchInput: {
+    color: ColorPalette.DARK_TEXT,
+  },
+  test: {
+    backgroundColor: 'red',
   },
 });
 

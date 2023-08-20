@@ -8,12 +8,10 @@ import {
 } from 'react-native';
 import auth from '../../api/auth';
 import tokenSession from '../../utils/EncryptedStorage/tokenSession';
-// import {useToken} from '../../tokens/TokenContext';
 
 const RegisterScreen = ({navigation}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  // const {setToken} = useToken();
   const [name, setName] = useState('');
 
   const fetchToken = async (
@@ -23,7 +21,6 @@ const RegisterScreen = ({navigation}: any) => {
   ) => {
     const res = await auth.register(name, username, password);
     if (res) {
-      // setToken(res.token);
       await tokenSession.storeToken(res.token);
     }
   };

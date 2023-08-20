@@ -1,7 +1,11 @@
 {
   "java.compile.nullAnalysis.mode": "automatic",
   "cSpell.words": [
-    "forgotpassword"
+    "Bulma",
+    "forgotpassword",
+    "isloading",
+    "Laravel",
+    "Signout"
   ],
   "java.configuration.updateBuildConfiguration": "interactive"
 

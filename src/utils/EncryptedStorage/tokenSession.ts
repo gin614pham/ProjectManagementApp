@@ -5,7 +5,7 @@ const storeToken = async (token: string) => {
 };
 
 const getToken = async () => {
-  return (await EncryptedStorage.getItem('token')) as string;
+  return ((await EncryptedStorage.getItem('token')) as string) || '';
 };
 
 const removeToken = async () => {

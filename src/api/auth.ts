@@ -5,12 +5,16 @@ const api = axios.create({
   baseURL: Config.API_URL,
 });
 const register = async (name: string, email: string, password: string) => {
-  const response = await api.post('/api/v1/auth/register', {
-    name,
-    email,
-    password,
-  });
-  return response.data;
+  try {
+    const response = await api.post('/api/v1/auth/register', {
+      name,
+      email,
+      password,
+    });
+    return response.data;
+  } catch (e) {
+    console.log('error', e);
+  }
 };
 
 const login = async (email: string, password: string) => {

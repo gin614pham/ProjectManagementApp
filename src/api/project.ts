@@ -36,24 +36,30 @@ const addProject = async (
   token: string,
   name: string,
   description: string,
-  start_date: string,
-  end_date: string,
+  customer: string,
+  skills: string[],
+  assignees: string[],
 ) => {
-  const response = await api.post(
-    '/api/v1/projects',
-    {
-      name,
-      description,
-      start_date,
-      end_date,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
+  try {
+    const response = await api.post(
+      '/api/v1/projects',
+      {
+        name,
+        description,
+        customer,
+        skills,
+        assignees,
       },
-    },
-  );
-  return response.data;
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (e) {
+    console.log('error', e);
+  }
 };
 
 const updateProject = async (
