@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,23 +6,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import auth from '../../api/auth';
-import tokenSession from '../../utils/EncryptedStorage/tokenSession';
+// import auth from '../../api/auth';
+// import tokenSession from '../../utils/EncryptedStorage/tokenSession';
+import {AuthContext} from '../../contexts/AuthContext';
 
 const LoginScreen = ({navigation}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const authContext = useContext(AuthContext);
 
-  const fetchToken = async (username: string, password: string) => {
-    const res = await auth.login(username, password);
-    if (res) {
-      await tokenSession.storeToken(res.token);
-      navigation.push('LoginScreen');
-    }
-  };
+  // const fetchToken = async (username: string, password: string) => {
+  //   const res = await auth.login(username, password);
+  //   if (res) {
+  //     await tokenSession.storeToken(res.token);
+  //     navigation.push('LoginScreen');
+  //   }
+  // };
 
   const handleLogin = () => {
-    fetchToken(username, password);
+    if (authContext) authContext.signIn(username, password);
   };
 
   return (

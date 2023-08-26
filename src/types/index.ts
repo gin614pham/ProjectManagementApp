@@ -23,3 +23,9 @@ export interface ItemDropDown {
   label: string;
   value: string;
 }
+
+export interface AuthContextType {
+  signIn: (username: string, password: string) => void;
+  signOut: () => void;
+  signUp: (name: string, email: string, password: string) => void;
+}
