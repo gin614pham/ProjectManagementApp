@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,27 +6,32 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import auth from '../../api/auth';
-import tokenSession from '../../utils/EncryptedStorage/tokenSession';
+import {AuthContext} from '../../contexts/AuthContext';
+import SIZE from '../../constants/styles/Font';
+import {ColorPalette} from '../../constants/styles/ColorPalette';
 
+/**
+ * Renders the Register screen component.
+ *
+ * @param {object} navigation - The navigation object.
+ * @return {JSX.Element} The rendered Register screen component.
+ */
 const RegisterScreen = ({navigation}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const authContext = useContext(AuthContext);
 
-  const fetchToken = async (
-    name: string,
-    username: string,
-    password: string,
-  ) => {
-    const res = await auth.register(name, username, password);
-    if (res) {
-      await tokenSession.storeToken(res.token);
-    }
-  };
-
+  /**
+   * Handles the registration process.
+   *
+   * @param {string} name - The name of the user.
+   * @param {string} username - The username of the user.
+   * @param {string} password - The password of the user.
+   * @return {void} This function does not return any value.
+   */
   const handleRegister = () => {
-    fetchToken(name, username, password);
+    authContext ? authContext.signUp(name, username, password) : {};
   };
 
   return (
@@ -54,7 +59,9 @@ const RegisterScreen = ({navigation}: any) => {
         <Text style={styles.sectionTitleRegister}>Register</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.sectionLink}>Login</Text>
+        <Text style={styles.sectionTitleLogin}>
+          Already have an account? <Text style={styles.sectionLink}>Login</Text>
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -62,49 +69,50 @@ const RegisterScreen = ({navigation}: any) => {
 
 const styles = StyleSheet.create({
   sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+    backgroundColor: ColorPalette.WHITE,
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: ColorPalette.SHADOW,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionRegisterButton: {
-    marginTop: 8,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: 'gray',
-    backgroundColor: 'white',
-    width: '100%',
-  },
-  sectionTitleRegister: {
-    fontSize: 18,
-    paddingVertical: 8,
-    color: 'blue',
-    textAlign: 'center',
+    fontSize: SIZE.LARGE,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   sectionInput: {
-    marginTop: 8,
-    paddingVertical: 8,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: 'gray',
-    backgroundColor: 'white',
-    color: 'black',
-    width: '100%',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: 18,
-    fontWeight: '600',
     height: 40,
+    borderColor: ColorPalette.LIGHT_GRAY,
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  sectionRegisterButton: {
+    backgroundColor: ColorPalette.BACKGROUND_LOGOUT_BUTTON,
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  sectionTitleRegister: {
+    color: ColorPalette.LIGHT_TEXT,
+    fontSize: SIZE.MEDIUM,
+    fontWeight: 'bold',
+  },
+  sectionTitleLogin: {
+    fontSize: SIZE.SMALL,
+    marginTop: 10,
   },
   sectionLink: {
-    marginTop: 8,
-    paddingVertical: 8,
-    color: 'blue',
+    color: ColorPalette.BACKGROUND_LOGIN_BUTTON,
     textDecorationLine: 'underline',
   },
 });

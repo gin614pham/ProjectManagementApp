@@ -10,7 +10,7 @@ const ProjectList = () => {
   const fetchProjects = async () => {
     const token = await tokenSession.getToken();
     const res = await project.getListProject(token);
-    setProjects(res.data);
+    res.success ? setProjects(res.data) : console.log(res.error);
   };
 
   useEffect(() => {
@@ -35,11 +35,15 @@ const ProjectList = () => {
         </View>
       )}
       keyExtractor={item => item._id}
+      contentContainerStyle={styles.listContainer}
     />
   );
 };
 
 const styles = StyleSheet.create({
+  listContainer: {
+    paddingHorizontal: 5,
+  },
   sectionRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,

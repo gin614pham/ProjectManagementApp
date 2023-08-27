@@ -1,27 +1,34 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ProfileScreen from '../screens/User/ProfileScreen';
-import {Text, TouchableOpacity, View} from 'react-native';
+import ProjectScreen from '../screens/Project/ProjectScreen';
+import UserScreen from '../screens/User/UserScreen';
+import userSession from '../utils/EncryptedStorage/userSession';
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigation = () => {
+  const [role, setRole] = useState('');
+
+  const getRole = async () => {
+    const res = await userSession.getUser();
+    res ? setRole(res.role) : setRole('');
+  };
+
+  useEffect(() => {
+    getRole();
+  }, []);
+
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="MainContent" component={MainContent} />
+      <Drawer.Screen
+        name="Project"
+        options={{title: 'Project'}}
+        component={ProjectScreen}
+      />
       <Drawer.Screen name="Profile" component={ProfileScreen} />
+      {role === 'admin' && <Drawer.Screen name="User" component={UserScreen} />}
     </Drawer.Navigator>
-  );
-};
-
-const MainContent = ({navigation}: any) => {
-  return (
-    <View>
-      <Text>Main Content</Text>
-      <TouchableOpacity onPress={() => console.log('Profile')}>
-        <Text>Profile</Text>
-      </TouchableOpacity>
-    </View>
   );
 };
 
