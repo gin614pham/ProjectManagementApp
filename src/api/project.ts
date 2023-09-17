@@ -62,21 +62,11 @@ const addProject = async (
   }
 };
 
-const updateProject = async (
-  token: string,
-  id: string,
-  name: string,
-  description: string,
-  start_date: string,
-  end_date: string,
-) => {
+const updateProject = async (token: string, id: string, status: string) => {
   const response = await api.put(
     `/api/v1/projects/${id}`,
     {
-      name,
-      description,
-      start_date,
-      end_date,
+      status: status,
     },
     {
       headers: {

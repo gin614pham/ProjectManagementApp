@@ -10,6 +10,7 @@ import auth from '../api/auth';
 import DrawerNavigation from './DrawerNavigation';
 import AddProjectScreen from '../screens/Project/AddProjectScreen';
 import userSession from '../utils/EncryptedStorage/userSession';
+import DetailProjectScreen from '../screens/Project/DetailProjectScreen';
 
 const fetchToken = async (username: string, password: string) => {
   const res = await auth.login(username, password);
@@ -73,6 +74,11 @@ const Navigation = () => {
                 options={options.AddProjectScreen}
                 component={AddProjectScreen}
               />
+              <Stack.Screen
+                name="DetailProjectScreen"
+                options={options.DetailProjectScreen}
+                component={DetailProjectScreen}
+              />
             </>
           ) : (
             <>
@@ -93,6 +99,10 @@ const options = {
   AddProjectScreen: {
     headerShown: true,
     title: 'Add Project',
+  },
+  DetailProjectScreen: {
+    headerShown: true,
+    title: 'Detail Project',
   },
 };
 

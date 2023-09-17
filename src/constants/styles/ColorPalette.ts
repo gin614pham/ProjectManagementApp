@@ -2,6 +2,7 @@ export const ColorPalette = {
   LIGHT_GRAY: '#CCC',
   DARK_TEXT: '#000',
   BLUE_BACKGROUND: '#3498db',
+  BLUE: '#3498db',
   RED: '#e74c3c',
   GREEN: '#2ecc71',
   YELLOW: '#f39c12',

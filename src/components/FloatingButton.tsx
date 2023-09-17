@@ -6,13 +6,16 @@ import {ColorPalette} from '../constants/styles/ColorPalette';
 
 type Props = {
   onPress: () => void;
+  icon: string;
+  size: number;
+  color: string;
 };
 
-const FloatingButton = ({onPress}: Props) => {
+const FloatingButton = ({onPress, icon, size, color}: Props) => {
   return (
     <View style={styles.buttonContainer}>
       <TouchableOpacity onPress={onPress}>
-        <Icon name="briefcase-plus-outline" size={30} color="black" />
+        <Icon name={icon} size={size} color={color} />
       </TouchableOpacity>
     </View>
   );

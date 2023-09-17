@@ -1,47 +1,53 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ItemDropDown} from '../types';
-import MultiSelect from 'react-native-multiple-select';
 import {StyleSheet, View} from 'react-native';
 import {ColorPalette} from '../constants/styles/ColorPalette';
-import SIZE from '../constants/styles/Font';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 interface Props {
   name: string;
   items: ItemDropDown[];
   selectItem: string[];
-  onItemSelect: (selectItem: string[]) => void;
+  enabled: boolean;
+  onItemSelect: (value: React.SetStateAction<string[]>) => void;
 }
 
 const MultiSelectDropdown = ({
   name,
   items,
   selectItem,
+  enabled,
   onItemSelect,
 }: Props) => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <View style={styles.container}>
-      <MultiSelect
+      <DropDownPicker
+        open={isOpen}
+        setOpen={() => setIsOpen(!isOpen)}
         items={items}
-        uniqueKey="value"
-        onSelectedItemsChange={onItemSelect}
-        selectedItems={selectItem}
-        selectText={`${name} : `}
-        searchInputPlaceholderText="Search"
-        tagRemoveIconColor={ColorPalette.RED}
-        tagBorderColor={ColorPalette.TEAL}
-        tagTextColor={ColorPalette.DARK_TEXT}
-        selectedItemTextColor={ColorPalette.DARK_TEXT}
-        selectedItemIconColor={ColorPalette.DARK_TEXT}
-        itemTextColor={ColorPalette.DARK_TEXT}
-        displayKey="label"
-        submitButtonColor={ColorPalette.DARK_TEXT}
-        fontSize={SIZE.MEDIUM}
-        hideSubmitButton
-        hideDropdown
-        // style custom
-        searchInputStyle={styles.searchInput}
-        styleDropdownMenuSubsection={styles.dropdownSubsection}
-        styleListContainer={styles.dropdownContainer}
+        value={selectItem}
+        setValue={value => onItemSelect(value)}
+        multiple={true}
+        min={1}
+        mode="BADGE"
+        badgeColors={[
+          'red',
+          'green',
+          'blue',
+          'yellow',
+          'purple',
+          'orange',
+          'pink',
+          'gray',
+          'brown',
+          'teal',
+        ]}
+        autoScroll
+        placeholder={`${name} : `}
+        disabled={enabled}
+        zIndex={3000}
+        zIndexInverse={1000}
       />
     </View>
   );

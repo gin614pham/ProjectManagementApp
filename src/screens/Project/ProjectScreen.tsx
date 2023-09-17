@@ -6,8 +6,13 @@ import FloatingButton from '../../components/FloatingButton';
 const ProjectScreen = ({navigation}: any) => {
   return (
     <View style={styles.container}>
-      <ProjectList />
-      <FloatingButton onPress={() => navigation.navigate('AddProjectScreen')} />
+      <ProjectList navigation={navigation} />
+      <FloatingButton
+        onPress={() => navigation.navigate('AddProjectScreen')}
+        icon="briefcase-plus-outline"
+        size={30}
+        color="white"
+      />
     </View>
   );
 };

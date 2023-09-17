@@ -29,3 +29,8 @@ export interface AuthContextType {
   signOut: () => void;
   signUp: (name: string, email: string, password: string) => void;
 }
+
+export interface ItemProjectProps {
+  item: Project;
+  onPress: () => void;
+}

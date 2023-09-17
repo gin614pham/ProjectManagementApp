@@ -55,16 +55,16 @@ const AddProjectScreen = () => {
   }, []);
 
   const optionAssignees = user.map(user => {
-    return {label: user.name, value: user._id};
+    return {label: `${user.name}    `, value: user._id};
   });
 
-  const onAssigneesSelect = (selectItem: string[]) => {
-    setSelectAssignees(selectItem);
-  };
+  // const onAssigneesSelect = (selectItem: string[]) => {
+  //   setSelectAssignees(selectItem);
+  // };
 
-  const onSkillSelect = (selectItem: string[]) => {
-    setSelectSkill(selectItem);
-  };
+  // const onSkillSelect = (selectItem: string[]) => {
+  //   setSelectSkill(selectItem);
+  // };
 
   const submitHandler = () => {
     console.log(
@@ -95,17 +95,66 @@ const AddProjectScreen = () => {
         onChangeText={text => setCustomer(text)}
         value={customer}
       />
-      <MultiSelectDropdown
+      {/* <MultiSelectDropdown
         name="Assignees"
         items={optionAssignees}
         selectItem={selectAssignees}
         onItemSelect={onAssigneesSelect}
+        enabled={false}
       />
       <MultiSelectDropdown
         name="Skills"
         items={SKILL_DATA}
         selectItem={selectSkill}
         onItemSelect={onSkillSelect}
+        enabled={false}
+      /> */}
+
+      {/* <DropDownPicker
+        items={optionAssignees}
+        value={selectAssignees}
+        setValue={value => setSelectAssignees(value)}
+        open={isOpen}
+        setOpen={() => setIsOpen(!isOpen)}
+        maxHeight={400}
+        autoScroll
+        placeholder="Select Assignees"
+        placeholderStyle={{
+          color: '#ccc',
+          fontSize: 12,
+          fontWeight: 'bold',
+        }}
+        multiple={true}
+        min={0}
+        max={10}
+        mode="BADGE"
+        badgeColors={['red', 'green', 'blue', 'black']}
+        badgeTextStyle={{
+          color: '#fff',
+          fontSize: 12,
+          fontWeight: 'bold',
+        }}
+        badgeDotColors={['white']}
+        style={{
+          borderColor: ColorPalette.LIGHT_GRAY,
+          borderWidth: 2,
+          borderRadius: 10,
+          marginBottom: 10,
+        }}
+      /> */}
+      <MultiSelectDropdown
+        name="Assignees"
+        items={optionAssignees}
+        selectItem={selectAssignees}
+        onItemSelect={setSelectAssignees}
+        enabled={false}
+      />
+      <MultiSelectDropdown
+        name="Skills"
+        items={SKILL_DATA}
+        selectItem={selectSkill}
+        onItemSelect={setSelectSkill}
+        enabled={false}
       />
       <TouchableOpacity style={styles.button} onPress={() => submitHandler()}>
         <Text style={styles.buttonText}>Submit</Text>
