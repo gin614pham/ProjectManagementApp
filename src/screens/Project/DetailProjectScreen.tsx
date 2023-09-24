@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Project} from '../../types';
+import {Project, User} from '../../types';
 import tokenSession from '../../utils/EncryptedStorage/tokenSession';
 import Projected from '../../api/project';
 import {
@@ -15,16 +15,22 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import {Picker} from '@react-native-picker/picker';
 import {PROJECT_STATUS_DATA, SKILL_DATA} from '../../constants/data/constants';
 import MultiSelectDropdown from '../../components/MultiSelectDropdown';
+import userRouter from '../../api/user';
 
-const DetailProjectScreen = ({route}: {route: any}) => {
+interface Props {
+  navigation: any;
+  route: any;
+}
+
+const DetailProjectScreen = ({route, navigation}: Props) => {
   const [project, setProject] = useState<Project>();
   const {key} = route.params;
   const [isEdit, setIsEdit] = useState(false);
   const [status, setStatus] = useState('');
-  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [selectAssignees, setSelectAssignees] = useState<string[]>([]);
   const [selectSkill, setSelectSkill] = useState<string[]>([]);
+  const [user, setUser] = useState<User[]>([]);
 
   const fetchProject = async () => {
     const token = await tokenSession.getToken();
@@ -32,28 +38,55 @@ const DetailProjectScreen = ({route}: {route: any}) => {
     res.success ? setProject(res.data) : console.log(res.error);
   };
 
+  const fetchDeleteProject = async () => {
+    const token = await tokenSession.getToken();
+    const res = await Projected.delProject(token, key);
+    res.success ? navigation.goBack() : console.log(res.error);
+  };
+
+  const fetchUsers = async () => {
+    const token = await tokenSession.getToken();
+    const res = await userRouter.getListUser(token);
+    if (res.success) {
+      setUser(res.data);
+    }
+  };
+
   const fetchStatus = async () => {
     const token = await tokenSession.getToken();
-    const res = await Projected.updateProject(token, key, status);
+    const res = await Projected.updateProject(
+      token,
+      key,
+      status,
+      description,
+      selectSkill,
+      selectAssignees,
+    );
     res.success ? setProject(res.data) : console.log(res.error);
   };
 
   const setValue = () => {
     setStatus(project?.status || '');
-    setName(project?.name || '');
     setDescription(project?.description || '');
     setSelectAssignees(project?.assignees.map(assignee => assignee._id) || []);
     setSelectSkill(project?.skills || []);
   };
 
+  const optionAssignees = user.map(user => {
+    return {label: `${user.name}    `, value: user._id};
+  });
+
   const handleEdit = () => {
     setIsEdit(true);
   };
 
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    fetchDeleteProject();
+  };
 
   const handleSave = () => {
     fetchStatus();
+    navigation.goBack();
     setIsEdit(false);
   };
 
@@ -64,6 +97,7 @@ const DetailProjectScreen = ({route}: {route: any}) => {
 
   useEffect(() => {
     fetchProject();
+    fetchUsers();
   }, []);
 
   useEffect(() => {
@@ -76,11 +110,7 @@ const DetailProjectScreen = ({route}: {route: any}) => {
         <View style={styles.content}>
           <View style={styles.label}>
             <Text style={styles.labelText}>Name:</Text>
-            <TextInput
-              value={name}
-              onChangeText={text => setName(text)}
-              editable={isEdit}
-              style={styles.valueText}></TextInput>
+            <Text style={styles.valueText}>{project.name}</Text>
           </View>
 
           <View style={styles.label}>
@@ -98,35 +128,25 @@ const DetailProjectScreen = ({route}: {route: any}) => {
             <Text style={styles.valueText}>{project.customer}</Text>
           </View>
 
-          <View style={styles.label}>
-            {/* <Text style={styles.labelText}>Skills:</Text> */}
-            {/* <Text style={styles.valueText}>
-                {project.skills.map((skill, index) => (
-                  <React.Fragment key={index}>
-                    {skill} {index !== project.skills.length - 1 && ', '}
-                  </React.Fragment>
-                ))}
-              </Text> */}
-            <MultiSelectDropdown
-              name="Skills"
-              items={SKILL_DATA}
-              selectItem={selectSkill}
-              onItemSelect={setSelectSkill}
-              enabled={!isEdit}
-            />
-          </View>
+          <MultiSelectDropdown
+            name="Skills"
+            items={SKILL_DATA}
+            selectItem={selectSkill}
+            onItemSelect={setSelectSkill}
+            enabled={!isEdit}
+            zIndex={3000}
+            zIndexInverse={1000}
+          />
 
-          <View style={styles.label}>
-            <Text style={styles.labelText}>Assignees:</Text>
-            <Text style={styles.valueText}>
-              {project.assignees.map((assignee, index) => (
-                <React.Fragment key={index}>
-                  {assignee.name}{' '}
-                  {index !== project.assignees.length - 1 && ', '}
-                </React.Fragment>
-              ))}
-            </Text>
-          </View>
+          <MultiSelectDropdown
+            name="Assignees"
+            items={optionAssignees}
+            selectItem={selectAssignees}
+            onItemSelect={setSelectAssignees}
+            enabled={!isEdit}
+            zIndex={2000}
+            zIndexInverse={2000}
+          />
 
           <View style={styles.label}>
             <Text style={styles.labelText}>Status:</Text>

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  Button,
   StyleSheet,
   Text,
   TextInput,
@@ -13,6 +14,8 @@ import tokenSession from '../../utils/EncryptedStorage/tokenSession';
 import {SKILL_DATA} from '../../constants/data/constants';
 import {ColorPalette} from '../../constants/styles/ColorPalette';
 import project from '../../api/project';
+import Modal from 'react-native-modal';
+import SIZE from '../../constants/styles/Font';
 
 const AddProjectScreen = () => {
   const [selectAssignees, setSelectAssignees] = useState<string[]>([]);
@@ -21,6 +24,8 @@ const AddProjectScreen = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [customer, setCustomer] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [error, setError] = useState('');
 
   const fetchUsers = async () => {
     const token = await tokenSession.getToken();
@@ -28,6 +33,10 @@ const AddProjectScreen = () => {
     if (res.success) {
       setUser(res.data);
     }
+  };
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
   };
 
   const fetchProjects = async () => {
@@ -47,6 +56,9 @@ const AddProjectScreen = () => {
       setSelectAssignees([]);
       setSelectSkill([]);
       console.log(res.success);
+    } else {
+      setIsModalVisible(true);
+      setError(res);
     }
   };
 
@@ -58,14 +70,6 @@ const AddProjectScreen = () => {
     return {label: `${user.name}    `, value: user._id};
   });
 
-  // const onAssigneesSelect = (selectItem: string[]) => {
-  //   setSelectAssignees(selectItem);
-  // };
-
-  // const onSkillSelect = (selectItem: string[]) => {
-  //   setSelectSkill(selectItem);
-  // };
-
   const submitHandler = () => {
     console.log(
       `submit: name: ${name}, description: ${description}, customer: ${customer}, user: ${selectAssignees}, skills: ${selectSkill}`,
@@ -75,6 +79,19 @@ const AddProjectScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Modal
+        isVisible={isModalVisible}
+        onBackdropPress={toggleModal}
+        onBackButtonPress={toggleModal}
+        style={{
+          justifyContent: 'flex-end',
+          margin: 0,
+        }}>
+        <View style={styles.modal}>
+          <Text style={styles.modalText}>{error}</Text>
+          <Button title="OK" onPress={toggleModal} />
+        </View>
+      </Modal>
       <TextInput
         style={styles.input}
         onChangeText={text => setName(text)}
@@ -95,59 +112,15 @@ const AddProjectScreen = () => {
         onChangeText={text => setCustomer(text)}
         value={customer}
       />
-      {/* <MultiSelectDropdown
-        name="Assignees"
-        items={optionAssignees}
-        selectItem={selectAssignees}
-        onItemSelect={onAssigneesSelect}
-        enabled={false}
-      />
-      <MultiSelectDropdown
-        name="Skills"
-        items={SKILL_DATA}
-        selectItem={selectSkill}
-        onItemSelect={onSkillSelect}
-        enabled={false}
-      /> */}
 
-      {/* <DropDownPicker
-        items={optionAssignees}
-        value={selectAssignees}
-        setValue={value => setSelectAssignees(value)}
-        open={isOpen}
-        setOpen={() => setIsOpen(!isOpen)}
-        maxHeight={400}
-        autoScroll
-        placeholder="Select Assignees"
-        placeholderStyle={{
-          color: '#ccc',
-          fontSize: 12,
-          fontWeight: 'bold',
-        }}
-        multiple={true}
-        min={0}
-        max={10}
-        mode="BADGE"
-        badgeColors={['red', 'green', 'blue', 'black']}
-        badgeTextStyle={{
-          color: '#fff',
-          fontSize: 12,
-          fontWeight: 'bold',
-        }}
-        badgeDotColors={['white']}
-        style={{
-          borderColor: ColorPalette.LIGHT_GRAY,
-          borderWidth: 2,
-          borderRadius: 10,
-          marginBottom: 10,
-        }}
-      /> */}
       <MultiSelectDropdown
         name="Assignees"
         items={optionAssignees}
         selectItem={selectAssignees}
         onItemSelect={setSelectAssignees}
         enabled={false}
+        zIndexInverse={1000}
+        zIndex={3000}
       />
       <MultiSelectDropdown
         name="Skills"
@@ -155,6 +128,8 @@ const AddProjectScreen = () => {
         selectItem={selectSkill}
         onItemSelect={setSelectSkill}
         enabled={false}
+        zIndexInverse={2000}
+        zIndex={2000}
       />
       <TouchableOpacity style={styles.button} onPress={() => submitHandler()}>
         <Text style={styles.buttonText}>Submit</Text>
@@ -191,6 +166,20 @@ const styles = StyleSheet.create({
   buttonText: {
     color: ColorPalette.WHITE,
     fontSize: 16,
+  },
+  modal: {
+    backgroundColor: ColorPalette.RED,
+    padding: 16,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 200,
+    width: '100%',
+    margin: 0,
+  },
+  modalText: {
+    color: ColorPalette.WHITE,
+    fontSize: SIZE.MEDIUM,
   },
 });
 

@@ -9,6 +9,8 @@ interface Props {
   items: ItemDropDown[];
   selectItem: string[];
   enabled: boolean;
+  zIndex: number;
+  zIndexInverse: number;
   onItemSelect: (value: React.SetStateAction<string[]>) => void;
 }
 
@@ -17,6 +19,8 @@ const MultiSelectDropdown = ({
   items,
   selectItem,
   enabled,
+  zIndex,
+  zIndexInverse,
   onItemSelect,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,8 +50,8 @@ const MultiSelectDropdown = ({
         autoScroll
         placeholder={`${name} : `}
         disabled={enabled}
-        zIndex={3000}
-        zIndexInverse={1000}
+        zIndex={zIndex}
+        zIndexInverse={zIndexInverse}
       />
     </View>
   );

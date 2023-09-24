@@ -1,23 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {FlatList, StyleSheet} from 'react-native';
-import project from '../api/project';
 import {Project} from '../types';
-import tokenSession from '../utils/EncryptedStorage/tokenSession';
 import ItemProject from './ItemProject';
 
-const ProjectList = ({navigation}: any) => {
-  const [projects, setProjects] = useState<Project[]>([]);
+interface Props {
+  navigation: any;
+  projects: Project[];
+}
 
-  const fetchProjects = async () => {
-    const token = await tokenSession.getToken();
-    const res = await project.getListProject(token);
-    res.success ? setProjects(res.data) : console.log(res.error);
-  };
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
+const ProjectList = ({navigation, projects}: Props) => {
   const onPress = (id: string) => {
     navigation.navigate('DetailProjectScreen', {key: id});
     console.log('onPress:', id);

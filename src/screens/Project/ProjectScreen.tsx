@@ -1,12 +1,33 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import ProjectList from '../../components/ProjectList';
 import FloatingButton from '../../components/FloatingButton';
+import {Project} from '../../types';
+import tokenSession from '../../utils/EncryptedStorage/tokenSession';
+import project from '../../api/project';
 
 const ProjectScreen = ({navigation}: any) => {
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  const fetchProjects = async () => {
+    const token = await tokenSession.getToken();
+    const res = await project.getListProject(token);
+    res.success ? setProjects(res.data) : console.log(res.error);
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchProjects();
+    });
+    return unsubscribe;
+  }, [navigation]);
   return (
     <View style={styles.container}>
-      <ProjectList navigation={navigation} />
+      <ProjectList navigation={navigation} projects={projects} />
       <FloatingButton
         onPress={() => navigation.navigate('AddProjectScreen')}
         icon="briefcase-plus-outline"
