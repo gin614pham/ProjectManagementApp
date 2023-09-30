@@ -58,6 +58,14 @@ const LoginScreen = ({navigation}: any) => {
           Register here
         </Text>
       </Text>
+      <Text style={styles.sectionRegisterText}>
+        Or you can{' '}
+        <Text
+          style={styles.sectionLink}
+          onPress={() => navigation.navigate('ResetPasswordScreen')}>
+          reset your password
+        </Text>
+      </Text>
     </View>
   );
 };

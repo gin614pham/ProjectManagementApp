@@ -1,53 +1,64 @@
 import React, {useEffect, useState} from 'react';
-import {Project} from '../../types';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import tokenSession from '../../utils/EncryptedStorage/tokenSession';
-import Projected from '../../api/project';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import userRouter from '../../api/user';
+import {User} from '../../types';
+import {Picker} from '@react-native-picker/picker';
+import Icon from 'react-native-vector-icons/AntDesign';
 import {ColorPalette} from '../../constants/styles/ColorPalette';
 import SIZE from '../../constants/styles/Font';
-import Icon from 'react-native-vector-icons/AntDesign';
-import {Picker} from '@react-native-picker/picker';
-import {PROJECT_STATUS_DATA} from '../../constants/data/constants';
 
-interface Props {
+interface props {
   navigation: any;
   route: any;
 }
 
-const DetailProjectScreen = ({route, navigation}: Props) => {
-  const [project, setProject] = useState<Project>();
+const DetailUserScreen = ({route, navigation}: props) => {
   const {key} = route.params;
+  const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState('');
+  const [name, setName] = useState('');
   const [isEdit, setIsEdit] = useState(false);
-  const [status, setStatus] = useState('');
 
-  const fetchProject = async () => {
+  const fetchUser = async () => {
     const token = await tokenSession.getToken();
-    const res = await Projected.getProjectById(token, key);
-    res.success ? setProject(res.data) : console.log(res.error);
-  };
-
-  const fetchDeleteProject = async () => {
-    const token = await tokenSession.getToken();
-    const res = await Projected.delProject(token, key);
-    res.success ? navigation.goBack() : console.log(res.error);
+    const res = await userRouter.getUserById(token, key);
+    res.success ? setUser(res.data) : console.log(res.error);
   };
 
   const fetchStatus = async () => {
     const token = await tokenSession.getToken();
-    const res = await Projected.updateProject(token, key, status);
-    res.success ? setProject(res.data) : console.log(res.error);
+    const res = await userRouter.updateUser(token, key, name, role);
+    res.success ? setIsEdit(false) : console.log(res.error);
+  };
+
+  const fetchDeleteUser = async () => {
+    const token = await tokenSession.getToken();
+    const res = await userRouter.delUser(token, key);
+    res.success ? navigation.goBack() : console.log(res.error);
   };
 
   const setValue = () => {
-    setStatus(project?.status || '');
+    setName(user?.name as string);
+    setRole(user?.role as string);
   };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    setValue();
+  }, [user]);
 
   const handleEdit = () => {
     setIsEdit(true);
-  };
-
-  const handleDelete = () => {
-    fetchDeleteProject();
   };
 
   const handleSave = () => {
@@ -60,67 +71,42 @@ const DetailProjectScreen = ({route, navigation}: Props) => {
     setValue();
     setIsEdit(false);
   };
-
-  useEffect(() => {
-    fetchProject();
-  }, []);
-
-  useEffect(() => {
-    setValue();
-  }, [project]);
+  const handleDelete = () => {
+    fetchDeleteUser();
+  };
 
   return (
     <View style={styles.container}>
-      {project ? (
-        <View style={styles.content}>
+      {user ? (
+        <>
           <View style={styles.label}>
             <Text style={styles.labelText}>Name:</Text>
-            <Text style={styles.valueText}>{project.name}</Text>
+            <TextInput
+              value={name}
+              onChangeText={text => setName(text)}
+              editable={isEdit}
+              style={styles.valueText}></TextInput>
           </View>
-
           <View style={styles.label}>
-            <Text style={styles.labelText}>Description:</Text>
-            <Text style={styles.valueText}>{project.description}</Text>
+            <Text style={styles.labelText}>Email:</Text>
+            <Text style={styles.valueText}>{user?.email}</Text>
           </View>
-
-          <View style={styles.label}>
-            <Text style={styles.labelText}>Customer:</Text>
-            <Text style={styles.valueText}>{project.customer}</Text>
-          </View>
-
-          <View style={styles.label}>
-            <Text style={styles.labelText}>Skill:</Text>
-            <Text style={styles.valueText}>{project.skills.join(', ')}</Text>
-          </View>
-
-          <View style={styles.label}>
-            <Text style={styles.labelText}>Assignees:</Text>
-            <Text style={styles.valueText}>
-              {project.assignees.map(item => item.name).join(', ')}
-            </Text>
-          </View>
-
-          <View style={styles.label}>
-            <Text style={styles.labelText}>Status:</Text>
-            <Picker
-              selectedValue={status}
-              onValueChange={itemValue => setStatus(itemValue)}
-              enabled={isEdit}>
-              {PROJECT_STATUS_DATA.map((item, index) => (
-                <Picker.Item
-                  key={index}
-                  label={item.label}
-                  value={item.value}
-                />
-              ))}
-            </Picker>
-          </View>
-
+          <Picker
+            selectedValue={role}
+            enabled={isEdit}
+            onValueChange={itemValue => {
+              setRole(itemValue);
+            }}>
+            <Picker.Item label="Admin" value="admin" />
+            <Picker.Item label="User" value="user" />
+          </Picker>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={isEdit ? handleSave : handleEdit}
-              style={styles.button}>
-              <Text style={styles.buttonText}>{isEdit ? 'Save' : 'Edit'}</Text>
+              style={[styles.button, {borderColor: ColorPalette.BLUE}]}>
+              <Text style={[styles.buttonText, {color: ColorPalette.BLUE}]}>
+                {isEdit ? 'Save' : 'Edit'}
+              </Text>
               <Icon
                 name={isEdit ? 'save' : 'edit'}
                 size={22}
@@ -140,7 +126,7 @@ const DetailProjectScreen = ({route, navigation}: Props) => {
               />
             </TouchableOpacity>
           </View>
-        </View>
+        </>
       ) : (
         <Text style={styles.loadingText}>Loading...</Text>
       )}
@@ -182,10 +168,6 @@ const styles = StyleSheet.create({
     color: '#555',
     fontSize: SIZE.MEDIUM,
   },
-  loadingText: {
-    fontStyle: 'italic',
-    fontSize: SIZE.LARGE,
-  },
   buttonContainer: {
     flexDirection: 'row',
 
@@ -214,6 +196,10 @@ const styles = StyleSheet.create({
     fontSize: SIZE.MEDIUM,
     fontWeight: 'bold',
   },
+  loadingText: {
+    fontStyle: 'italic',
+    fontSize: SIZE.LARGE,
+  },
 });
 
-export default DetailProjectScreen;
+export default DetailUserScreen;

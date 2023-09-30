@@ -11,7 +11,6 @@ interface Props {
 const ProjectList = ({navigation, projects}: Props) => {
   const onPress = (id: string) => {
     navigation.navigate('DetailProjectScreen', {key: id});
-    console.log('onPress:', id);
   };
 
   const renderItem = ({item}: {item: Project}) => {

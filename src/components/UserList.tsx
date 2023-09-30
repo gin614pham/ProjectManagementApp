@@ -3,10 +3,10 @@ import {User} from '../types';
 import tokenSession from '../utils/EncryptedStorage/tokenSession';
 import user from '../api/user';
 import {FlatList} from 'react-native-gesture-handler';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ColorPalette} from '../constants/styles/ColorPalette';
 
-const UserList = () => {
+const UserList = ({navigation}: any) => {
   const [users, setUsers] = useState<User[]>([]);
 
   const fetchUsers = async () => {
@@ -15,9 +15,16 @@ const UserList = () => {
     res.success ? setUsers(res.data) : console.log(res.error);
   };
 
+  const onPress = (id: string) => {
+    navigation.navigate('DetailUserScreen', {key: id});
+  };
+
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchUsers();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <FlatList
@@ -25,18 +32,20 @@ const UserList = () => {
       renderItem={({item}) => {
         return (
           <View style={styles.listItem}>
-            <Text>
-              <Text style={styles.labelText}>Name: </Text>
-              <Text style={styles.valueTextName}>{item.name}</Text>
-            </Text>
-            <Text>
-              <Text style={styles.labelText}>Email: </Text>
-              <Text style={styles.valueTextEmail}>{item.email}</Text>
-            </Text>
-            <Text>
-              <Text style={styles.labelText}>Role: </Text>
-              <Text style={styles.valueTextRole}>{item.role}</Text>
-            </Text>
+            <TouchableOpacity onPress={() => onPress(item._id)}>
+              <Text>
+                <Text style={styles.labelText}>Name: </Text>
+                <Text style={styles.valueTextName}>{item.name}</Text>
+              </Text>
+              <Text>
+                <Text style={styles.labelText}>Email: </Text>
+                <Text style={styles.valueTextEmail}>{item.email}</Text>
+              </Text>
+              <Text>
+                <Text style={styles.labelText}>Role: </Text>
+                <Text style={styles.valueTextRole}>{item.role}</Text>
+              </Text>
+            </TouchableOpacity>
           </View>
         );
       }}

@@ -11,6 +11,8 @@ import DrawerNavigation from './DrawerNavigation';
 import AddProjectScreen from '../screens/Project/AddProjectScreen';
 import userSession from '../utils/EncryptedStorage/userSession';
 import DetailProjectScreen from '../screens/Project/DetailProjectScreen';
+import DetailUserScreen from '../screens/User/DetailUserScreen';
+import ResetPasswordScreen from '../screens/Auth/ResetPasswordScreen';
 
 const fetchToken = async (username: string, password: string) => {
   const res = await auth.login(username, password);
@@ -79,11 +81,20 @@ const Navigation = () => {
                 options={options.DetailProjectScreen}
                 component={DetailProjectScreen}
               />
+              <Stack.Screen
+                name="DetailUserScreen"
+                options={options.DetailUserScreen}
+                component={DetailUserScreen}
+              />
             </>
           ) : (
             <>
               <Stack.Screen name="LoginScreen" component={LoginScreen} />
               <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+              <Stack.Screen
+                name="ResetPasswordScreen"
+                component={ResetPasswordScreen}
+              />
             </>
           )}
         </Stack.Navigator>
@@ -103,6 +114,10 @@ const options = {
   DetailProjectScreen: {
     headerShown: true,
     title: 'Detail Project',
+  },
+  DetailUserScreen: {
+    headerShown: true,
+    title: 'Detail User',
   },
 };
 

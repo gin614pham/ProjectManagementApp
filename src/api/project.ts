@@ -67,20 +67,10 @@ const addProject = async (
   }
 };
 
-const updateProject = async (
-  token: string,
-  id: string,
-  status: string,
-  description: string,
-  skills: string[],
-  assignees: string[],
-) => {
+const updateProject = async (token: string, id: string, status: string) => {
   const response = await api.put(
     `/api/v1/projects/${id}`,
     {
-      description: description,
-      skills: skills,
-      assignees: assignees,
       status: status,
     },
     {
@@ -91,7 +81,6 @@ const updateProject = async (
   );
   return response.data;
 };
-
 export default {
   getListProject,
   getProjectById,

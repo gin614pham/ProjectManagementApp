@@ -5,9 +5,20 @@ import FloatingButton from '../../components/FloatingButton';
 import {Project} from '../../types';
 import tokenSession from '../../utils/EncryptedStorage/tokenSession';
 import project from '../../api/project';
+import userSession from '../../utils/EncryptedStorage/userSession';
 
 const ProjectScreen = ({navigation}: any) => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [role, setRole] = useState('');
+
+  const getRole = async () => {
+    const res = await userSession.getUser();
+    res ? setRole(res.role) : setRole('');
+  };
+
+  useEffect(() => {
+    getRole();
+  }, []);
 
   const fetchProjects = async () => {
     const token = await tokenSession.getToken();
@@ -28,12 +39,14 @@ const ProjectScreen = ({navigation}: any) => {
   return (
     <View style={styles.container}>
       <ProjectList navigation={navigation} projects={projects} />
-      <FloatingButton
-        onPress={() => navigation.navigate('AddProjectScreen')}
-        icon="briefcase-plus-outline"
-        size={30}
-        color="white"
-      />
+      {role === 'admin' && (
+        <FloatingButton
+          onPress={() => navigation.navigate('AddProjectScreen')}
+          icon="briefcase-plus-outline"
+          size={30}
+          color="white"
+        />
+      )}
     </View>
   );
 };

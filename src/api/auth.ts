@@ -4,6 +4,14 @@ import Config from 'react-native-config';
 const api = axios.create({
   baseURL: Config.API_URL,
 });
+/**
+ * Registers a user with the given name, email, and password.
+ *
+ * @param {string} name - The name of the user.
+ * @param {string} email - The email of the user.
+ * @param {string} password - The password of the user.
+ * @return {Promise<any>} The response data from the API call.
+ */
 const register = async (name: string, email: string, password: string) => {
   try {
     const response = await api.post('/api/v1/auth/register', {
@@ -17,6 +25,13 @@ const register = async (name: string, email: string, password: string) => {
   }
 };
 
+/**
+ * Logs in a user with the provided email and password.
+ *
+ * @param {string} email - The user's email.
+ * @param {string} password - The user's password.
+ * @return {Promise<any>} - A promise that resolves to the user's data.
+ */
 const login = async (email: string, password: string) => {
   const response = await api.post('/api/v1/auth/login', {
     email,
@@ -42,9 +57,17 @@ const forgotPassword = async (email: string) => {
   return response.data;
 };
 
+const resetPassword = async (URL: string, password: string) => {
+  const response = await api.post(URL, {
+    password: password,
+  });
+  return response.data;
+};
+
 export default {
   register,
   login,
   info,
   forgotPassword,
+  resetPassword,
 };

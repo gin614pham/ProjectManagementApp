@@ -45,10 +45,18 @@ const addUser = async (token: string) => {
   return response.data;
 };
 
-const updateUser = async (token: string) => {
+const updateUser = async (
+  token: string,
+  id: string,
+  name: string,
+  role: string,
+) => {
   const response = await api.put(
-    '/api/v1/users',
-    {},
+    `/api/v1/users/${id}`,
+    {
+      name: name,
+      role: role,
+    },
     {
       headers: {
         Authorization: `Bearer ${token}`,

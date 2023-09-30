@@ -3,10 +3,10 @@ import {View} from 'react-native';
 import UserList from '../../components/UserList';
 import {StyleSheet} from 'react-native';
 
-const UserScreen = () => {
+const UserScreen = ({navigation}: any) => {
   return (
     <View style={styles.container}>
-      <UserList />
+      <UserList navigation={navigation} />
     </View>
   );
 };

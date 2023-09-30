@@ -55,7 +55,6 @@ const AddProjectScreen = () => {
       setCustomer('');
       setSelectAssignees([]);
       setSelectSkill([]);
-      console.log(res.success);
     } else {
       setIsModalVisible(true);
       setError(res);
@@ -71,9 +70,6 @@ const AddProjectScreen = () => {
   });
 
   const submitHandler = () => {
-    console.log(
-      `submit: name: ${name}, description: ${description}, customer: ${customer}, user: ${selectAssignees}, skills: ${selectSkill}`,
-    );
     fetchProjects();
   };
 
