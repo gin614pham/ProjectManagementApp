@@ -9,6 +9,7 @@ import {
 import {AuthContext} from '../../contexts/AuthContext';
 import {ColorPalette} from '../../constants/styles/ColorPalette';
 import SIZE from '../../constants/styles/Font';
+import ErrorModal from '../../modal/ErrorModal';
 
 /**
  * Renders a login screen with input fields for username and password.
@@ -21,6 +22,8 @@ const LoginScreen = ({navigation}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const authContext = useContext(AuthContext);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [message, setMessage] = useState('');
 
   /**
    * Handles the login functionality.
@@ -33,8 +36,23 @@ const LoginScreen = ({navigation}: any) => {
     authContext ? authContext.signIn(username, password) : {};
   };
 
+  const checkLogin = () => {
+    // check username and password is not empty
+    if (username !== '' && password !== '') {
+      handleLogin();
+    } else {
+      setIsModalVisible(true);
+      setMessage('Please enter username and password');
+    }
+  };
+
   return (
     <View style={styles.sectionContainer}>
+      <ErrorModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        message={message}
+      />
       <Text style={styles.sectionTitle}>Login</Text>
       <TextInput
         style={styles.sectionInput}
@@ -47,7 +65,7 @@ const LoginScreen = ({navigation}: any) => {
         onChangeText={text => setPassword(text)}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.sectionLoginButton} onPress={handleLogin}>
+      <TouchableOpacity style={styles.sectionLoginButton} onPress={checkLogin}>
         <Text style={styles.sectionTitleLogin}>Login</Text>
       </TouchableOpacity>
       <Text style={styles.sectionRegisterText}>

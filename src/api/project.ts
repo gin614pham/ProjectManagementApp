@@ -6,30 +6,42 @@ const api = axios.create({
 });
 
 const getListProject = async (token: string) => {
-  const response = await api.get('/api/v1/projects', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+  try {
+    const response = await api.get('/api/v1/projects', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (e) {
+    console.log('error', e);
+  }
 };
 
 const getProjectById = async (token: string, id: string) => {
-  const response = await api.get(`/api/v1/projects/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+  try {
+    const response = await api.get(`/api/v1/projects/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (e) {
+    console.log('error', e);
+  }
 };
 
 const delProject = async (token: string, id: string) => {
-  const response = await api.delete(`/api/v1/projects/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+  try {
+    const response = await api.delete(`/api/v1/projects/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (e) {
+    console.log('error', e);
+  }
 };
 
 const addProject = async (
@@ -68,18 +80,22 @@ const addProject = async (
 };
 
 const updateProject = async (token: string, id: string, status: string) => {
-  const response = await api.put(
-    `/api/v1/projects/${id}`,
-    {
-      status: status,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
+  try {
+    const response = await api.put(
+      `/api/v1/projects/${id}`,
+      {
+        status: status,
       },
-    },
-  );
-  return response.data;
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (e) {
+    console.log('error', e);
+  }
 };
 export default {
   getListProject,

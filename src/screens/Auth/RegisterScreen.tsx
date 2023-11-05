@@ -9,6 +9,7 @@ import {
 import {AuthContext} from '../../contexts/AuthContext';
 import SIZE from '../../constants/styles/Font';
 import {ColorPalette} from '../../constants/styles/ColorPalette';
+import ErrorModal from '../../modal/ErrorModal';
 
 /**
  * Renders the Register screen component.
@@ -21,6 +22,8 @@ const RegisterScreen = ({navigation}: any) => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const authContext = useContext(AuthContext);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [message, setMessage] = useState('');
 
   /**
    * Handles the registration process.
@@ -34,8 +37,41 @@ const RegisterScreen = ({navigation}: any) => {
     authContext ? authContext.signUp(name, username, password) : {};
   };
 
+  const checkRegister = () => {
+    // check name is not empty, email is valid, and password has at least 6 characters
+    if (name.trim() === '') {
+      setMessage('Please enter name');
+      setIsModalVisible(true);
+
+      return;
+    }
+
+    // check email is valid
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(username)) {
+      setMessage('Please enter valid email');
+      setIsModalVisible(true);
+      return;
+    }
+
+    // check password has at least 6 characters
+    if (password.length < 6) {
+      setMessage('Password must be at least 6 characters');
+      setIsModalVisible(true);
+      return;
+    }
+
+    // continue with registration process
+    handleRegister();
+  };
+
   return (
     <View style={styles.sectionContainer}>
+      <ErrorModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        message={message}
+      />
       <Text style={styles.sectionTitle}>Register</Text>
       <TextInput
         style={styles.sectionInput}
@@ -55,10 +91,10 @@ const RegisterScreen = ({navigation}: any) => {
       />
       <TouchableOpacity
         style={styles.sectionRegisterButton}
-        onPress={handleRegister}>
+        onPress={checkRegister}>
         <Text style={styles.sectionTitleRegister}>Register</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
         <Text style={styles.sectionTitleLogin}>
           Already have an account? <Text style={styles.sectionLink}>Login</Text>
         </Text>

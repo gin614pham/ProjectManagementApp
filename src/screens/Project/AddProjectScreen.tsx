@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Button,
   StyleSheet,
   Text,
   TextInput,
@@ -14,8 +13,8 @@ import tokenSession from '../../utils/EncryptedStorage/tokenSession';
 import {SKILL_DATA} from '../../constants/data/constants';
 import {ColorPalette} from '../../constants/styles/ColorPalette';
 import project from '../../api/project';
-import Modal from 'react-native-modal';
 import SIZE from '../../constants/styles/Font';
+import ErrorModal from '../../modal/ErrorModal';
 
 const AddProjectScreen = () => {
   const [selectAssignees, setSelectAssignees] = useState<string[]>([]);
@@ -33,10 +32,6 @@ const AddProjectScreen = () => {
     if (res.success) {
       setUser(res.data);
     }
-  };
-
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
   };
 
   const fetchProjects = async () => {
@@ -70,24 +65,32 @@ const AddProjectScreen = () => {
   });
 
   const submitHandler = () => {
+    // check name, description, customer is not empty
+    if (
+      name.trim() === '' ||
+      description.trim() === '' ||
+      customer.trim() === ''
+    ) {
+      setIsModalVisible(true);
+      setError('Please enter name, description, customer');
+      return;
+    }
+    // check assignees, skills is not empty
+    if (selectAssignees.length === 0 || selectSkill.length === 0) {
+      setIsModalVisible(true);
+      setError('Please select at least one assignee and one skill');
+      return;
+    }
     fetchProjects();
   };
 
   return (
     <View style={styles.container}>
-      <Modal
-        isVisible={isModalVisible}
-        onBackdropPress={toggleModal}
-        onBackButtonPress={toggleModal}
-        style={{
-          justifyContent: 'flex-end',
-          margin: 0,
-        }}>
-        <View style={styles.modal}>
-          <Text style={styles.modalText}>{error}</Text>
-          <Button title="OK" onPress={toggleModal} />
-        </View>
-      </Modal>
+      <ErrorModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        message={error}
+      />
       <TextInput
         style={styles.input}
         onChangeText={text => setName(text)}

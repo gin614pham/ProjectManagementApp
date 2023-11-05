@@ -33,35 +33,51 @@ const register = async (name: string, email: string, password: string) => {
  * @return {Promise<any>} - A promise that resolves to the user's data.
  */
 const login = async (email: string, password: string) => {
-  const response = await api.post('/api/v1/auth/login', {
-    email,
-    password,
-  });
+  try {
+    const response = await api.post('/api/v1/auth/login', {
+      email,
+      password,
+    });
 
-  return response.data;
+    return response.data;
+  } catch (e) {
+    console.log('error', e);
+  }
 };
 
 const info = async (token: string) => {
-  const response = await api.get('/api/v1/auth/me', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+  try {
+    const response = await api.get('/api/v1/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (e) {
+    console.log('error', e);
+  }
 };
 
 const forgotPassword = async (email: string) => {
-  const response = await api.post('/api/v1/auth/forgotpassword', {
-    email,
-  });
-  return response.data;
+  try {
+    const response = await api.post('/api/v1/auth/forgotpassword', {
+      email,
+    });
+    return response.data;
+  } catch (e) {
+    console.log('error', e);
+  }
 };
 
 const resetPassword = async (URL: string, password: string) => {
-  const response = await api.post(URL, {
-    password: password,
-  });
-  return response.data;
+  try {
+    const response = await api.post(URL, {
+      password: password,
+    });
+    return response.data;
+  } catch (e) {
+    console.log('error', e);
+  }
 };
 
 export default {
